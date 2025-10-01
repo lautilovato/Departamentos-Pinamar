@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import './App.css'
 import { apiService } from './services/api'
+import Home from './Home'
+import DevPage from './DevPage'
 
 interface BackendStatus {
   message: string;
@@ -12,7 +13,6 @@ interface BackendStatus {
 }
 
 function App() {
-  const [count, setCount] = useState(0)
   const [backendStatus, setBackendStatus] = useState<BackendStatus>({
     message: '',
     health: null,
@@ -25,10 +25,7 @@ function App() {
       try {
         setBackendStatus(prev => ({ ...prev, loading: true, error: null }))
         
-        // Probar conexión con el endpoint principal
         const welcomeMessage = await apiService.getWelcomeMessage()
-        
-        // Probar endpoint de salud
         const healthStatus = await apiService.checkHealth()
         
         setBackendStatus({
@@ -51,50 +48,66 @@ function App() {
   }, [])
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Departamentos Pinamar</h1>
-      <h2>React + Vite + NestJS + PostgreSQL</h2>
-      
-      {/* Estado de conexión con el backend */}
-      <div className="card">
-        <h3>Estado del Backend:</h3>
-        {backendStatus.loading && <p>🔄 Conectando con el backend...</p>}
-        {backendStatus.error && (
-          <div style={{ color: 'red', padding: '10px', border: '1px solid red', borderRadius: '5px', margin: '10px 0' }}>
-            <p>❌ Error: {backendStatus.error}</p>
-            <p>Para iniciar el backend ejecuta: <code>cd back && yarn start:dev</code></p>
-          </div>
-        )}
-        {!backendStatus.loading && !backendStatus.error && (
-          <div style={{ color: 'green', padding: '10px', border: '1px solid green', borderRadius: '5px', margin: '10px 0' }}>
-            <p>✅ Backend conectado correctamente</p>
-            <p><strong>Mensaje:</strong> {backendStatus.message}</p>
-            <p><strong>Health Check:</strong> {backendStatus.health?.status} - {backendStatus.health?.message}</p>
-            <p><strong>Timestamp:</strong> {backendStatus.health?.timestamp}</p>
-          </div>
-        )}
-      </div>
+    <Router>
+      <div className="app">
+        {/* Navegación de desarrollo */}
+        <nav style={{ 
+          padding: '10px 20px', 
+          background: '#f8f9fa', 
+          borderBottom: '1px solid #dee2e6',
+          marginBottom: '0'
+        }}>
+          <Link 
+            to="/" 
+            style={{ 
+              marginRight: '15px', 
+              textDecoration: 'none', 
+              padding: '8px 16px',
+              borderRadius: '5px',
+              background: '#007bff',
+              color: 'white',
+              fontSize: '14px'
+            }}
+          >
+            🏠 Home
+          </Link>
+          <Link 
+            to="/dev" 
+            style={{ 
+              textDecoration: 'none', 
+              padding: '8px 16px',
+              borderRadius: '5px',
+              background: '#6c757d',
+              color: 'white',
+              fontSize: '14px'
+            }}
+          >
+            🔧 Dev Status
+          </Link>
+        </nav>
 
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        {/* Definición de todas las rutas */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/dev" element={<DevPage backendStatus={backendStatus} />} />
+          
+          {/* Rutas futuras */}
+          {/* <Route path="/departamentos" element={<Departamentos />} /> */}
+          {/* <Route path="/servicios" element={<Servicios />} /> */}
+          {/* <Route path="/contacto" element={<Contacto />} /> */}
+          {/* <Route path="/departamento/:id" element={<DepartamentoDetalle />} /> */}
+          
+          {/* Ruta 404 */}
+          <Route path="*" element={
+            <div style={{ textAlign: 'center', padding: '50px' }}>
+              <h2>Página no encontrada</h2>
+              <p>La página que buscas no existe.</p>
+              <Link to="/">Volver al inicio</Link>
+            </div>
+          } />
+        </Routes>
       </div>
-      <p className="read-the-docs">
-        Proyecto Full Stack: Frontend (React + Vite) ↔ Backend (NestJS + PostgreSQL)
-      </p>
-    </>
+    </Router>
   )
 }
 
