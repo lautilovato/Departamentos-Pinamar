@@ -4,6 +4,7 @@ import './App.css'
 import { apiService } from './services/api'
 import Home from './Home'
 import DevPage from './DevPage'
+import Layout from './components/layout/Layout';
 
 interface BackendStatus {
   message: string;
@@ -50,61 +51,18 @@ function App() {
   return (
     <Router>
       <div className="app">
-        {/* Navegación de desarrollo */}
-        <nav style={{ 
-          padding: '10px 20px', 
-          background: '#f8f9fa', 
-          borderBottom: '1px solid #dee2e6',
-          marginBottom: '0'
-        }}>
-          <Link 
-            to="/" 
-            style={{ 
-              marginRight: '15px', 
-              textDecoration: 'none', 
-              padding: '8px 16px',
-              borderRadius: '5px',
-              background: '#007bff',
-              color: 'white',
-              fontSize: '14px'
-            }}
-          >
-            🏠 Home
-          </Link>
-          <Link 
-            to="/dev" 
-            style={{ 
-              textDecoration: 'none', 
-              padding: '8px 16px',
-              borderRadius: '5px',
-              background: '#6c757d',
-              color: 'white',
-              fontSize: '14px'
-            }}
-          >
-            🔧 Dev Status
-          </Link>
-        </nav>
-
-        {/* Definición de todas las rutas */}
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/dev" element={<DevPage backendStatus={backendStatus} />} />
-          
-          {/* Rutas futuras */}
-          {/* <Route path="/departamentos" element={<Departamentos />} /> */}
-          {/* <Route path="/servicios" element={<Servicios />} /> */}
-          {/* <Route path="/contacto" element={<Contacto />} /> */}
-          {/* <Route path="/departamento/:id" element={<DepartamentoDetalle />} /> */}
-          
-          {/* Ruta 404 */}
-          <Route path="*" element={
-            <div style={{ textAlign: 'center', padding: '50px' }}>
-              <h2>Página no encontrada</h2>
-              <p>La página que buscas no existe.</p>
-              <Link to="/">Volver al inicio</Link>
-            </div>
-          } />
+          <Route element={<Layout />}> 
+            <Route path="/" element={<Home />} />
+            <Route path="/dev" element={<DevPage backendStatus={backendStatus} />} />
+            <Route path="*" element={
+              <div style={{ textAlign: 'center', padding: '50px' }}>
+                <h2>Página no encontrada</h2>
+                <p>La página que buscas no existe.</p>
+                <Link to="/">Volver al inicio</Link>
+              </div>
+            } />
+          </Route>
         </Routes>
       </div>
     </Router>
