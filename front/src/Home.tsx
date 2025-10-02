@@ -19,7 +19,7 @@ const Home: React.FC = () => {
               className="hero-img"
             />
             <div className="hero-overlay">
-              <h1>Bienvenidos a Departamentos Pinamar</h1>
+              <h1>Bienvenidos a Lautaro 225</h1>
               <p>El lugar perfecto para tus vacaciones</p>
             </div>
           </div>
