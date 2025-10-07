@@ -1,0 +1,44 @@
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    ParseIntPipe,
+    Patch,
+    Post,
+    Req,
+    UseGuards,
+    BadRequestException,
+    NotFoundException,
+} from '@nestjs/common';
+
+import { ReservasService } from './reservas.service';
+import { UpdateReservaDto } from './updateReserva.dto';
+import { CreateReservaDto } from './dto/createReserva.dto';
+
+@Controller('reservas')
+export class ReservasController {
+    constructor(private reservasService: ReservasService) {}
+
+    @Get(':id')
+    async getReservaById(@Param('id', ParseIntPipe) id: number) {
+        const reserva = await this.reservasService.findOne(id);
+        if (!reserva) {
+            throw new NotFoundException('Reserva no encontrada');
+        }
+        return reserva;
+    }
+
+    @Get()
+    async getAllReservas() {
+        const reservas = await this.reservasService.findAll();
+        return reservas
+    }
+
+    @Post()
+    create(@Body() createReservaDto: CreateReservaDto) {
+        return this.reservasService.create(createReservaDto);
+    }
+
+}

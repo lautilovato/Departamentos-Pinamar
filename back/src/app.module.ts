@@ -5,6 +5,9 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Departamento } from './infrastructure/database/entities/departamento.entity';
+import { Reserva } from './infrastructure/database/entities/reserva.entity';
+import { ReservasModule } from './modules/reservas/reservas.module';
+
 
 @Module({
   imports: [
@@ -18,10 +21,11 @@ import { Departamento } from './infrastructure/database/entities/departamento.en
       user: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || 'root',
       dbName: process.env.DB_NAME || 'departamentos_pinamar',
-      entities: [Departamento],
+      entities: [Departamento, Reserva],
       debug: true,
       allowGlobalContext: true, // Solo para desarrollo
     }),
+    ReservasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
