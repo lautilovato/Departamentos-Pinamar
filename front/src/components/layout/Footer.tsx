@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
         </div>
       </div>
       <div className="footer-bottom">
-        <p>&copy; 2025 Departamentos Pinamar. Todos los derechos reservados.</p>
+        <p>&copy; 2025 Lautaro 225. Todos los derechos reservados.</p>
       </div>
     </footer>
   );

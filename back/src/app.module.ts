@@ -4,7 +4,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Departamento } from './entities/departamento.entity';
+import { Departamento } from './infrastructure/database/entities/departamento.entity';
 
 @Module({
   imports: [
