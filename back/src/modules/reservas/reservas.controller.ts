@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 
 import { ReservasService } from './reservas.service';
-import { UpdateReservaDto } from './updateReserva.dto';
+import { UpdateReservaDto } from './dto/updateReserva.dto';
 import { CreateReservaDto } from './dto/createReserva.dto';
 
 @Controller('reservas')

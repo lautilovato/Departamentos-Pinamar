@@ -5,6 +5,7 @@ import { apiService } from './services/api'
 import Home from './Home'
 import DevPage from './DevPage'
 import Layout from './components/layout/Layout';
+import Reservas from './reservas/Reservas';
 
 interface BackendStatus {
   message: string;
@@ -55,6 +56,7 @@ function App() {
           <Route element={<Layout />}> 
             <Route path="/" element={<Home />} />
             <Route path="/dev" element={<DevPage backendStatus={backendStatus} />} />
+            <Route path="/reservas" element={<Reservas />} />
             <Route path="*" element={
               <div style={{ textAlign: 'center', padding: '50px' }}>
                 <h2>Página no encontrada</h2>

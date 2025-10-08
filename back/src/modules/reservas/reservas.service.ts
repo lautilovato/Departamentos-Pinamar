@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { TransactionalMikroOrmClass } from "../../shared/decorators/transactional-mikro-orm.decorator";
 import { ReservasRepository } from "./reservas.repository";
-import { UpdateReservaDto } from './updateReserva.dto';
+import { UpdateReservaDto } from './dto/updateReserva.dto';
 import { CreateReservaDto } from './dto/createReserva.dto';
 import { wrap } from '@mikro-orm/core';
 import { Reserva } from '../../infrastructure/database/entities/reserva.entity';
