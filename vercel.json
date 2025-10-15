@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "front/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "functions": {
+    "back/api/index.ts": {
+      "runtime": "@vercel/node@18"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/back/api/index.ts"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/front/dist/$1"
+    }
+  ],
+  "buildCommand": "cd front && yarn install && yarn build",
+  "installCommand": "cd front && yarn install && cd ../back && yarn install"
+}
