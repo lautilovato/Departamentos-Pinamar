@@ -10,13 +10,13 @@ const envFile = isTest ? '.env.test' : '.env';
 dotenv.config({ path: join(__dirname, '../../../', envFile) });
 
 export default defineConfig({
-  // Priorizar DATABASE_URL de Railway, sino usar configuración individual
-  clientUrl: process.env.DATABASE_URL || undefined,
-  host: process.env.DATABASE_URL ? undefined : (process.env.DB_HOST || 'localhost'),
-  port: process.env.DATABASE_URL ? undefined : (parseInt(process.env.DB_PORT) || 5432),
-  user: process.env.DATABASE_URL ? undefined : (process.env.DB_USERNAME || 'postgres'),
-  password: process.env.DATABASE_URL ? undefined : (process.env.DB_PASSWORD || 'root'),
-  dbName: process.env.DATABASE_URL ? undefined : (process.env.DB_NAME || 'departamentos_pinamar'),
+  // Usar variables individuales para más flexibilidad
+  host: process.env.DATABASE_HOST?.replace(/'/g, '') || 'localhost',
+  port: parseInt(process.env.DATABASE_PORT?.replace(/'/g, '') || '5432'),
+  user: process.env.DATABASE_USER?.replace(/'/g, '') || 'postgres',
+  password: process.env.DATABASE_PASSWORD?.replace(/'/g, '') || 'root',
+  dbName: process.env.DATABASE_NAME?.replace(/'/g, '') || 'departamentos_pinamar',
+  
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
   debug: process.env.NODE_ENV === 'development',
@@ -27,7 +27,8 @@ export default defineConfig({
     pathTs: join(__dirname, './migrations'),
   },
   allowGlobalContext: true, // Solo para desarrollo
-  // Configuración adicional para Railway
+  
+  // Configuración SSL para producción (Railway)
   driverOptions: {
     connection: {
       ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,

@@ -7,13 +7,12 @@
       "config": {
         "distDir": "dist"
       }
+    },
+    {
+      "src": "back/api/index.ts",
+      "use": "@vercel/node"
     }
   ],
-  "functions": {
-    "back/api/index.ts": {
-      "runtime": "@vercel/node@18"
-    }
-  },
   "routes": [
     {
       "src": "/api/(.*)",
