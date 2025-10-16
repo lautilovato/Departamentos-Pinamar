@@ -20,9 +20,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/front/dist/$1"
+      "dest": "/front/dist/index.html"
     }
-  ],
-  "buildCommand": "cd front && yarn install && yarn build",
-  "installCommand": "cd front && yarn install && cd ../back && yarn install"
+  ]
 }
