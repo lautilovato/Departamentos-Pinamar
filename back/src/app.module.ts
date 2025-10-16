@@ -8,8 +8,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Departamento } from './infrastructure/database/entities/departamento.entity';
 import { Reserva } from './infrastructure/database/entities/reserva.entity';
+import { ReservaRequest } from './infrastructure/database/entities/reservaRequest.entity';
 import { User } from './infrastructure/database/entities/user.entity';
 import { ReservasModule } from './modules/reservas/reservas.module';
+import { ReservaRequestModule } from './modules/reservasRequest/reservaRequest.module';
 import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
@@ -22,7 +24,7 @@ import { AuthModule } from './modules/auth/auth.module';
         const clientUrl = config.get<string>('DATABASE_URL');
         const base = {
           driver: PostgreSqlDriver,
-          entities: [Departamento, Reserva, User],
+          entities: [Departamento, Reserva, ReservaRequest, User],
           debug: true,
           allowGlobalContext: true,
           migrations: {
@@ -46,6 +48,7 @@ import { AuthModule } from './modules/auth/auth.module';
       },
     }),
     ReservasModule,
+    ReservaRequestModule,
     AuthModule,
   ],
   controllers: [AppController],

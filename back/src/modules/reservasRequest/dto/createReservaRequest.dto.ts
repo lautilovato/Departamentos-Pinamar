@@ -11,7 +11,7 @@ export class CreateReservaRequestDto {
 
   @IsNotEmpty()
   @IsString()
-  numeroTel?: string;
+  numeroTel: string;
 
   @IsNotEmpty()
   @IsDateString()

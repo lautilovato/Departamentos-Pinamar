@@ -4,7 +4,7 @@ import { ReservasRequestRepository } from "./reservasRequest.repository";
 import { UpdateReservaRequestDto } from './dto/updateReservaRequest.dto';
 import { CreateReservaRequestDto } from './dto/createReservaRequest.dto';
 import { wrap } from '@mikro-orm/core';
-import { Reserva } from '../../infrastructure/database/entities/reserva.entity';
+import { ReservaRequest } from '../../infrastructure/database/entities/reservaRequest.entity';
 
 @Injectable()
 @TransactionalMikroOrmClass()
@@ -21,11 +21,12 @@ export class ReservasRequestService {
         return this.reservasRequestRepository.findAll();
     }
 
-    async create(createReservaRequestDto: CreateReservaRequestDto): Promise<Reserva> {
+    async create(createReservaRequestDto: CreateReservaRequestDto): Promise<ReservaRequest> {
         const reservaData = {
             ...createReservaRequestDto,
             fechaInicio: new Date(createReservaRequestDto.fechaInicio),
-            fechaFin: new Date(createReservaRequestDto.fechaFin)
+            fechaFin: new Date(createReservaRequestDto.fechaFin),
+            estado: 'pendiente' // Asegurar que tenga estado inicial
         };
         const reserva = this.reservasRequestRepository.create(reservaData);
         await this.reservasRequestRepository.save(reserva);

@@ -95,6 +95,30 @@ class AuthService {
       headers,
     });
   }
+
+  // Métodos específicos para reservas request
+  async getReservasRequest(): Promise<any[]> {
+    const response = await this.authenticatedRequest('/reservas-request');
+    if (!response.ok) throw new Error('Error al cargar reservas request');
+    return response.json();
+  }
+
+  async aprobarReservaRequest(id: number): Promise<any> {
+    const response = await this.authenticatedRequest(`/reservas-request/${id}/aprobar`, {
+      method: 'PATCH'
+    });
+    if (!response.ok) throw new Error('Error al aprobar reserva');
+    return response.json();
+  }
+
+  async rechazarReservaRequest(id: number, motivoRechazo: string): Promise<any> {
+    const response = await this.authenticatedRequest(`/reservas-request/${id}/rechazar`, {
+      method: 'PATCH',
+      body: JSON.stringify({ motivoRechazo })
+    });
+    if (!response.ok) throw new Error('Error al rechazar reserva');
+    return response.json();
+  }
 }
 
 export const authService = new AuthService();

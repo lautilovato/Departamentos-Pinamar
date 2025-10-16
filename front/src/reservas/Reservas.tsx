@@ -175,27 +175,38 @@ const Reservas: React.FC = () => {
     setSuccessMsg(null);
     setError(null);
     try {
-      await api.post('/reservas', {
+      // Cambio: ahora enviamos a /reservas-request en lugar de /reservas
+      await api.post('/reservas-request', {
         cliente: nombreCliente,
         numeroTel: telefono,
         fechaInicio: startDate.toISOString(),
-        fechaFin: new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 1).toISOString(), // fin exclusivo
+        fechaFin: new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 1).toISOString(),
         departamentoId: selectedDepto,
       });
-      setSuccessMsg('Reserva creada correctamente');
-      // Refrescar reservas
-      const { data } = await api.get<ReservaApi[]>('/reservas');
-      const parsed: ReservaParsed[] = data.map(r => ({
-        ...r,
-        fechaInicio: new Date(r.fechaInicio),
-        fechaFin: new Date(r.fechaFin)
-      }));
-      setReservas(parsed);
+      
+      // Cambio: mensaje actualizado para reflejar que es una solicitud
+      setSuccessMsg('Solicitud de reserva enviada correctamente. Recibirás una confirmación pronto.');
+      
+      // Nota: No refrescamos las reservas porque la solicitud está pendiente de aprobación
+      // Solo limpiamos el formulario
       clearSelection();
       setNombreCliente('');
       setTelefono('');
     } catch (e: any) {
-      setError('Error creando la reserva');
+      console.error('Error al enviar solicitud:', e);
+      
+      // Mejorar el manejo de errores para mostrar información específica
+      let errorMessage = 'Error enviando la solicitud de reserva. Por favor, intenta nuevamente.';
+      
+      if (e.response?.data?.message) {
+        errorMessage = `Error: ${e.response.data.message}`;
+      } else if (e.response?.status) {
+        errorMessage = `Error del servidor (${e.response.status}). Por favor, intenta nuevamente.`;
+      } else if (e.message) {
+        errorMessage = `Error: ${e.message}`;
+      }
+      
+      setError(errorMessage);
     } finally {
       setCreating(false);
     }
@@ -206,9 +217,10 @@ const Reservas: React.FC = () => {
       {/* estilos movidos a reservas.css */}
 
       <div className="panel fade-in" style={{ marginBottom: '1.5rem' }}>
-        <h1 className="title">Reservar estadía</h1>
+        <h1 className="title">Solicitar Reserva</h1>
         <p style={{ margin: '0 0 1rem', fontSize: '.9rem', color: '#475569' }}>
-          Elegí un departamento, seleccioná un rango de fechas disponible y completá tus datos para solicitar la reserva.
+          Elegí un departamento, seleccioná un rango de fechas disponible y completá tus datos para enviar tu solicitud de reserva. 
+          Un administrador revisará tu solicitud y te contactará para confirmarla.
         </p>
 
         <div className="dept-selector">
@@ -275,7 +287,7 @@ const Reservas: React.FC = () => {
         </div>
 
         <div className="panel-form fade-in">
-          <h2 style={{ margin: '0 0 .8rem', fontSize: '1rem', fontWeight: 600 }}>Detalles de la reserva</h2>
+          <h2 style={{ margin: '0 0 .8rem', fontSize: '1rem', fontWeight: 600 }}>Detalles de la solicitud</h2>
           <div className="summary">
             <div><strong>Departamento:</strong> {departamentos.find(d => d.id === selectedDepto)?.nombre}</div>
             <div><strong>Entrada:</strong> {formatDate(startDate)}</div>
@@ -303,7 +315,7 @@ const Reservas: React.FC = () => {
             <div className="actions">
               <button className="btn btn-outline" type="button" onClick={clearSelection}>Limpiar</button>
               <button className="btn btn-primary" type="button" disabled={!canSubmit || creating} onClick={handleCreate}>
-                {creating ? 'Guardando...' : 'Reservar'}
+                {creating ? 'Enviando solicitud...' : 'Enviar Solicitud'}
               </button>
             </div>
 

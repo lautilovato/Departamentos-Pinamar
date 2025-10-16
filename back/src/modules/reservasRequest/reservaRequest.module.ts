@@ -8,4 +8,4 @@ import { ReservasRequestRepository } from './reservasRequest.repository';
   providers: [ReservasRequestService, ReservasRequestRepository],
   exports: [ReservasRequestService],
 })
-export class ReservasModule {}
+export class ReservaRequestModule {}
