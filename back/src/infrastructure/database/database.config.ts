@@ -10,13 +10,13 @@ const envFile = isTest ? '.env.test' : '.env';
 dotenv.config({ path: join(__dirname, '../../../', envFile) });
 
 export default defineConfig({
-  // Usar variables individuales para más flexibilidad
-  host: process.env.DATABASE_HOST?.replace(/'/g, '') || 'localhost',
-  port: parseInt(process.env.DATABASE_PORT?.replace(/'/g, '') || '5432'),
-  user: process.env.DATABASE_USER?.replace(/'/g, '') || 'postgres',
-  password: process.env.DATABASE_PASSWORD?.replace(/'/g, '') || 'root',
-  dbName: process.env.DATABASE_NAME?.replace(/'/g, '') || 'departamentos_pinamar',
-  
+  // Preferir DATABASE_URL si está presente (Railway / producción)
+  clientUrl: process.env.DATABASE_URL,
+  host: process.env.DB_HOST || 'localhost',
+  port: parseInt(process.env.DB_PORT || '5432', 10),
+  user: process.env.DB_USERNAME || 'postgres',
+  password: process.env.DB_PASSWORD || 'root',
+  dbName: process.env.DB_NAME || 'departamentos_pinamar',
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
   debug: process.env.NODE_ENV === 'development',

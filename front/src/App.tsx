@@ -41,7 +41,7 @@ function App() {
           message: '',
           health: null,
           loading: false,
-          error: 'Error conectando con el backend. Asegúrate de que el servidor esté ejecutándose en http://localhost:3000'
+          error: 'Error conectando con el backend. Verifica la URL de la API (VITE_API_URL) y que el servidor esté en ejecución.'
         })
       }
     }
