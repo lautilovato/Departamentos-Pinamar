@@ -19,7 +19,7 @@ export default defineConfig({
   dbName: process.env.DB_NAME || 'departamentos_pinamar',
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
-  debug: process.env.NODE_ENV === 'development',
+  debug: true,
   metadataProvider: TsMorphMetadataProvider,
   extensions: [Migrator],
   migrations: {
@@ -27,11 +27,4 @@ export default defineConfig({
     pathTs: join(__dirname, './migrations'),
   },
   allowGlobalContext: true, // Solo para desarrollo
-  
-  // Configuración SSL para producción (Railway)
-  driverOptions: {
-    connection: {
-      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-    },
-  },
 });
