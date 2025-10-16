@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom'; // FIX: reintroducir Link
-import '../../Home.css'; // estilos generales primero
+import '../../Home/Home.css'; // Corregir la ruta del import
 import './layout.css'; // overrides específicos después
 
 const Header: React.FC = () => {

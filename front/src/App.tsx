@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import './App.css'
 import { apiService } from './services/api'
-import Home from './Home'
+import Home from './Home/Home'
 import DevPage from './DevPage'
 import Layout from './components/layout/Layout';
 import Reservas from './reservas/Reservas';
+import Login from './Login/Login';
+import AdminDashboard from './components/AdminDashboard';
+import ProtectedRoute from './components/ProtectedRoute';
 
 interface BackendStatus {
   message: string;
@@ -53,6 +56,20 @@ function App() {
     <Router>
       <div className="app">
         <Routes>
+          {/* Ruta de login sin layout */}
+          <Route path="/admin/login" element={<Login />} />
+          
+          {/* Rutas admin protegidas sin layout */}
+          <Route 
+            path="/admin/dashboard" 
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Rutas normales con layout */}
           <Route element={<Layout />}> 
             <Route path="/" element={<Home />} />
             <Route path="/dev" element={<DevPage backendStatus={backendStatus} />} />

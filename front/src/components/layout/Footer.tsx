@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../Home.css'; // reutiliza estilos existentes
+import '../../Home/Home.css'; // Corregir la ruta del import
 
 const Footer: React.FC = () => {
   return (
