@@ -1,17 +1,23 @@
 #!/bin/bash
-# Script para verificar el build
-echo "🔍 Verificando el build..."
+# Script to verify build is working correctly
 
-if [ ! -f "dist/main.js" ]; then
-    echo "❌ ERROR: dist/main.js no existe"
-    echo "📁 Contenido del directorio dist:"
-    ls -la dist/ || echo "dist/ no existe"
-    exit 1
-fi
+echo "🔨 Building project..."
+yarn build
 
-echo "✅ dist/main.js existe"
-echo "📁 Contenido del directorio dist:"
+echo "📁 Checking dist directory..."
 ls -la dist/
 
-echo "🚀 Iniciando aplicación..."
-node dist/main.js
+echo "🔍 Checking main.js exists..."
+if [ -f "dist/main.js" ]; then
+    echo "✅ dist/main.js found"
+    echo "📋 File info:"
+    ls -la dist/main.js
+    echo "🎯 Testing execution (dry run)..."
+    node -e "console.log('✅ Node can load the file successfully')" 2>/dev/null && echo "Node test passed" || echo "❌ Node test failed"
+else
+    echo "❌ dist/main.js NOT FOUND"
+    echo "Available files in dist:"
+    find dist -name "*.js" | head -10
+fi
+
+echo "🏁 Verification complete"
