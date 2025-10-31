@@ -17,8 +17,18 @@ COPY . .
 # Build the application
 RUN yarn build
 
+# Verify build completed successfully
+RUN echo "🔍 Verifying build..." && \
+    ls -la dist/ && \
+    if [ ! -f "dist/main.js" ]; then \
+        echo "❌ ERROR: dist/main.js not found after build!" && \
+        exit 1; \
+    else \
+        echo "✅ Build verification successful - dist/main.js exists"; \
+    fi
+
 # Expose port
 EXPOSE 3000
 
-# Start the application
-CMD ["yarn", "start:prod"]
+# Start the application with verification
+CMD ["sh", "-c", "echo '🚀 Starting application...' && ls -la dist/main.js && node dist/main.js"]
