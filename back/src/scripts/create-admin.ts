@@ -46,12 +46,12 @@ async function createAdminUser() {
     console.log('👤 Creando usuario administrador...');
 
     // Crear usuario administrador
-    const hashedPassword = await bcrypt.hash('Zapiola802', 10);
+    const hashedPassword = await bcrypt.hash('admin123', 10);
     
     const adminUser = em.create(User, {
-      email: 'lautaro.lovato07@gmail.com',
+      email: 'admin@departamentospinamar.com',
       password: hashedPassword,
-      nombre: 'Lautaro Lovato',
+      nombre: 'Administrador',
       role: UserRole.ADMIN,
     });
 
