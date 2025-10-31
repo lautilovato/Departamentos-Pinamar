@@ -4,11 +4,13 @@
   "main": "dist/main.js",
   "license": "MIT",
   "engines": {
-    "node": "18.x",
+    "node": ">=18.0.0",
     "yarn": "1.x"
   },
   "scripts": {
+    "prebuild": "rimraf dist",
     "build": "nest build",
+    "postbuild": "echo Build completed successfully",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -34,8 +36,7 @@
     "seed:prod": "node dist/scripts/seed.js",
     "create-admin": "ts-node -r tsconfig-paths/register src/scripts/create-admin.ts",
     "create-admin:prod": "node dist/scripts/create-admin.js",
-    "db:setup": "npm run migrate && npm run seed",
-    "postbuild": "echo 'Build completed successfully'"
+    "db:setup": "npm run migrate && npm run seed"
   },
   "dependencies": {
     "@mikro-orm/core": "^6.5.7",
@@ -60,6 +61,7 @@
     "passport-jwt": "^4.0.1",
     "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
+    "rimraf": "^6.1.0",
     "rxjs": "^7.8.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
