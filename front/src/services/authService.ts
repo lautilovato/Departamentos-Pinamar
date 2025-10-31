@@ -11,7 +11,7 @@ interface LoginResponse {
 }
 
 class AuthService {
-  private baseUrl = 'http://localhost:3000';
+  private baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
   async login(email: string, password: string): Promise<LoginResponse> {
     const response = await fetch(`${this.baseUrl}/auth/login`, {
