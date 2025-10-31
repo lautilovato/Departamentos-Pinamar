@@ -1,16 +1,20 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { TransactionalMikroOrmClass } from "../../shared/decorators/transactional-mikro-orm.decorator";
 import { ReservasRequestRepository } from "./reservasRequest.repository";
+import { ReservasRepository } from "../reservas/reservas.repository";
 import { UpdateReservaRequestDto } from './dto/updateReservaRequest.dto';
 import { CreateReservaRequestDto } from './dto/createReservaRequest.dto';
 import { wrap } from '@mikro-orm/core';
 import { ReservaRequest } from '../../infrastructure/database/entities/reservaRequest.entity';
+import { Reserva } from '../../infrastructure/database/entities/reserva.entity';
+
 
 @Injectable()
 @TransactionalMikroOrmClass()
 export class ReservasRequestService {
     constructor(
       private reservasRequestRepository: ReservasRequestRepository,
+      private reservasRepository: ReservasRepository,
     ) { }
 
     async findOne(id: number) {
@@ -44,13 +48,32 @@ export class ReservasRequestService {
     }
 
     async aprobar(reservaId: number) {
-        const reserva = await this.reservasRequestRepository.findOne({ id: reservaId });
-        if (!reserva) {
-          throw new NotFoundException('Reserva no encontrada');
+        const reservaRequest = await this.reservasRequestRepository.findOne({ id: reservaId });
+        if (!reservaRequest) {
+          throw new NotFoundException('Solicitud de reserva no encontrada');
         }
-        reserva.estado = 'aprobada';
-        await this.reservasRequestRepository.save(reserva);
-        return reserva;
+
+        // Crear la reserva confirmada con los datos de la solicitud
+        const nuevaReserva = this.reservasRepository.create({
+            cliente: reservaRequest.cliente,
+            numeroTel: reservaRequest.numeroTel,
+            fechaInicio: reservaRequest.fechaInicio,
+            fechaFin: reservaRequest.fechaFin,
+            departamentoId: reservaRequest.departamentoId,
+        });
+
+        // Guardar la nueva reserva
+        await this.reservasRepository.save(nuevaReserva);
+
+        // Actualizar el estado de la solicitud y vincular con la reserva creada
+        reservaRequest.estado = 'aprobada';
+        reservaRequest.reservaId = nuevaReserva.id;
+        await this.reservasRequestRepository.save(reservaRequest);
+
+        return {
+            solicitud: reservaRequest,
+            reservaCreada: nuevaReserva
+        };
     }
 
     async rechazar(reservaId: number) {
