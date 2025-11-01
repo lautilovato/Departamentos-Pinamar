@@ -9,7 +9,7 @@ interface ReservaApi {
   numeroTel: string;
   fechaInicio: string; // ISO
   fechaFin: string; // ISO
-  departamentoId: number;
+  numeroDepartamento: string;
   estado?: string;
 }
 
@@ -19,8 +19,8 @@ interface ReservaParsed extends Omit<ReservaApi, 'fechaInicio' | 'fechaFin'> {
 }
 
 const departamentos = [
-  { id: 1, nombre: 'Departamento Atlántico' },
-  { id: 2, nombre: 'Departamento Medanos' },
+  { id: 1, nombre: 'Departamento Atlántico', codigo: 'ATL001' },
+  { id: 2, nombre: 'Departamento Medanos', codigo: 'MED002' },
 ];
 
 // Utilidades
@@ -102,7 +102,10 @@ const Reservas: React.FC = () => {
   }, []);
 
   // Filtrar las reservas del departamento seleccionado
-  const reservasDepto = useMemo(() => reservas.filter(r => r.departamentoId === selectedDepto), [reservas, selectedDepto]);
+  const reservasDepto = useMemo(() => {
+    const codigoDepto = departamentos.find(d => d.id === selectedDepto)?.codigo;
+    return reservas.filter(r => r.numeroDepartamento === codigoDepto);
+  }, [reservas, selectedDepto]);
 
   // Determinar si un día está reservado
   const isDayReserved = (day: Date) => {
@@ -175,12 +178,13 @@ const Reservas: React.FC = () => {
     setSuccessMsg(null);
     setError(null);
     try {
+      const codigoDepto = departamentos.find(d => d.id === selectedDepto)?.codigo;
       await api.post('/reservas', {
         cliente: nombreCliente,
         numeroTel: telefono,
         fechaInicio: startDate.toISOString(),
         fechaFin: new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 1).toISOString(), // fin exclusivo
-        departamentoId: selectedDepto,
+        numeroDepartamento: codigoDepto,
       });
       setSuccessMsg('Reserva creada correctamente');
       // Refrescar reservas
