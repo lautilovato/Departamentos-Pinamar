@@ -12,13 +12,13 @@ export class Reserva {
   numeroTel!: string;
 
   @Property()
+  numeroDepartamento!: string;
+
+  @Property()
   fechaInicio!: Date;
 
   @Property()
   fechaFin!: Date;
-
-  @Property()
-  departamentoId!: number;
 
   @Property({ default: 'pendiente' })
   estado?: string; // pendiente, confirmada

@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsDateString, IsNumber, IsIn } from 'class-validator';
+import { IsOptional, IsString, IsDateString, IsIn } from 'class-validator';
 
 export class UpdateReservaDto {
   @IsOptional()
@@ -10,16 +10,16 @@ export class UpdateReservaDto {
   numeroTel?: string;
 
   @IsOptional()
+  @IsString()
+  numeroDepartamento?: string;
+
+  @IsOptional()
   @IsDateString()
   fechaInicio?: Date;
 
   @IsOptional()
   @IsDateString()
   fechaFin?: Date;
-
-  @IsOptional()
-  @IsNumber()
-  departamentoId?: number;
 
   @IsOptional()
   @IsString()

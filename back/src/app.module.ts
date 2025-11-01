@@ -6,7 +6,6 @@ import { MikroORM } from '@mikro-orm/core';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Departamento } from './infrastructure/database/entities/departamento.entity';
 import { Reserva } from './infrastructure/database/entities/reserva.entity';
 import { User } from './infrastructure/database/entities/User.entity';
 import { ReservasModule } from './modules/reservas/reservas.module';
@@ -24,7 +23,7 @@ import { AuthModule } from './modules/auth/auth.module';
         const clientUrl = config.get<string>('DATABASE_URL');
         const base = {
           driver: PostgreSqlDriver,
-          entities: [Departamento, Reserva, User],
+          entities: [Reserva, User],
           debug: true,
           allowGlobalContext: true,
           migrations: {
