@@ -25,6 +25,13 @@ export default defineConfig({
   migrations: {
     path: join(__dirname, './migrations'),
     pathTs: join(__dirname, './migrations'),
+    snapshot: true,
+    transactional: true,
+    disableForeignKeys: false,
+    allOrNothing: true,
+    dropTables: true,
+    safe: false,
+    snapshotName: '.snapshot',
   },
   allowGlobalContext: true, // Solo para desarrollo
 });

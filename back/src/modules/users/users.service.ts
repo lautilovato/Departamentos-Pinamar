@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { UpdateUserDto } from './dto/updateUser.dto';
-import { User } from '../../infrastructure/database/entities/User';
+import { User } from '../../infrastructure/database/entities/User.entity';
 import { Transactional, wrap } from '@mikro-orm/core';
 import { TransactionalMikroOrmClass } from '../../shared/decorators/transactional-mikro-orm.decorator';
 

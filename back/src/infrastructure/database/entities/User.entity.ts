@@ -9,7 +9,7 @@ import {
   } from '@mikro-orm/core';
 
 import * as bcrypt from 'bcrypt-ts';
-import { CustomBaseEntity } from './BaseEntity';
+import { CustomBaseEntity } from './BaseEntity.entity';
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 
 export enum UserRole {

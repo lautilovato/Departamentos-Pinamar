@@ -1,5 +1,5 @@
 import { IsEmail, IsEnum, IsNotEmpty, IsString, MinLength } from 'class-validator';
-import { UserRole } from '../../../infrastructure/database/entities/User';
+import { UserRole } from '../../../infrastructure/database/entities/User.entity';
 
 
 
