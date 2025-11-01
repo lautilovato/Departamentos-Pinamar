@@ -10,6 +10,9 @@ import { Departamento } from './infrastructure/database/entities/departamento.en
 import { Reserva } from './infrastructure/database/entities/reserva.entity';
 import { User } from './infrastructure/database/entities/User.entity';
 import { ReservasModule } from './modules/reservas/reservas.module';
+import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+
 
 @Module({
   imports: [
@@ -45,6 +48,8 @@ import { ReservasModule } from './modules/reservas/reservas.module';
       },
     }),
     ReservasModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
