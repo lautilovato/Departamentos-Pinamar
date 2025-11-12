@@ -64,4 +64,62 @@ export const apiService = {
       throw error;
     }
   },
+
+  // Funciones para reservas
+  reservas: {
+    // Obtener todas las reservas
+    getAll: async () => {
+      try {
+        const response = await api.get('/reservas');
+        return response.data;
+      } catch (error) {
+        console.error('Error obteniendo reservas:', error);
+        throw error;
+      }
+    },
+
+    // Obtener reservas por estado
+    getByEstado: async (estado: string) => {
+      try {
+        const response = await api.get(`/reservas?estado=${estado}`);
+        return response.data;
+      } catch (error) {
+        console.error('Error obteniendo reservas por estado:', error);
+        throw error;
+      }
+    },
+
+    // Confirmar reserva
+    confirmar: async (id: number) => {
+      try {
+        const response = await api.patch(`/reservas/${id}/confirmar`);
+        return response.data;
+      } catch (error) {
+        console.error('Error confirmando reserva:', error);
+        throw error;
+      }
+    },
+
+    // Rechazar reserva
+    rechazar: async (id: number) => {
+      try {
+        const response = await api.patch(`/reservas/${id}/rechazar`);
+        return response.data;
+      } catch (error) {
+        console.error('Error rechazando reserva:', error);
+        throw error;
+      }
+    },
+
+    // Crear nueva reserva
+    create: async (reservaData: any) => {
+      try {
+        const response = await api.post('/reservas', reservaData);
+        return response.data;
+      } catch (error) {
+        console.error('Error creando reserva:', error);
+        throw error;
+      }
+    }
+  }
 };

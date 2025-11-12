@@ -6,6 +6,7 @@ import Home from './Home'
 import DevPage from './DevPage'
 import Layout from './components/layout/Layout';
 import Reservas from './reservas/Reservas';
+import AdminPanel from './dashboard/AdminPanel'
 
 interface BackendStatus {
   message: string;
@@ -57,6 +58,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/dev" element={<DevPage backendStatus={backendStatus} />} />
             <Route path="/reservas" element={<Reservas />} />
+            <Route path="/admin" element={<AdminPanel />} />
             <Route path="*" element={
               <div style={{ textAlign: 'center', padding: '50px' }}>
                 <h2>Página no encontrada</h2>

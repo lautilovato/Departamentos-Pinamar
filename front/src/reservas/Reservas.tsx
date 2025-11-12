@@ -104,7 +104,7 @@ const Reservas: React.FC = () => {
   // Filtrar las reservas del departamento seleccionado
   const reservasDepto = useMemo(() => {
     const codigoDepto = departamentos.find(d => d.id === selectedDepto)?.codigo;
-    return reservas.filter(r => r.numeroDepartamento === codigoDepto);
+    return reservas.filter(r => r.numeroDepartamento === codigoDepto && r.estado === 'confirmada');
   }, [reservas, selectedDepto]);
 
   // Determinar si un día está reservado

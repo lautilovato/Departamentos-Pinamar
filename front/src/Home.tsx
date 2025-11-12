@@ -39,7 +39,7 @@ const Home: React.FC = () => {
               <div className="info-card">
                 <h3>Comodidad y Confort</h3>
                 <p>
-                  Departamentos totalmente equipados con aire acondicionado, WiFi, 
+                  Departamentos totalmente equipados con baño, WiFi, 
                   cocina completa y todas las comodidades para una estadía perfecta.
                 </p>
               </div>

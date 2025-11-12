@@ -21,6 +21,6 @@ export class Reserva {
   fechaFin!: Date;
 
   @Property({ default: 'pendiente' })
-  estado?: string; // pendiente, confirmada
+  estado?: string; // pendiente, confirmada, rechazada
 
 }

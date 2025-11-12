@@ -11,6 +11,7 @@ import {
     UseGuards,
     BadRequestException,
     NotFoundException,
+    Query,
 } from '@nestjs/common';
 
 import { ReservasService } from './reservas.service';
@@ -31,7 +32,10 @@ export class ReservasController {
     }
 
     @Get()
-    async getAllReservas() {
+    async getAllReservas(@Query('estado') estado?: string) {
+        if (estado) {
+            return await this.reservasService.findByEstado(estado);
+        }
         const reservas = await this.reservasService.findAll();
         return reservas
     }
@@ -39,6 +43,16 @@ export class ReservasController {
     @Post()
     create(@Body() createReservaDto: CreateReservaDto) {
         return this.reservasService.create(createReservaDto);
+    }
+
+    @Patch(':id/confirmar')
+    async confirmarReserva(@Param('id', ParseIntPipe) id: number) {
+        return await this.reservasService.confirmarReserva(id);
+    }
+
+    @Patch(':id/rechazar')
+    async rechazarReserva(@Param('id', ParseIntPipe) id: number) {
+        return await this.reservasService.rechazarReserva(id);
     }
 
 }

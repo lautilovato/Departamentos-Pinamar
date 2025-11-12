@@ -7,16 +7,15 @@ const Footer: React.FC = () => {
       <div className="footer-content">
         <div className="footer-section">
           <h4>Contacto</h4>
-          <p>📍 Pinamar, Buenos Aires</p>
-          <p>📞 +54 9 11 1234-5678</p>
-          <p>✉️ info@departamentospinamar.com</p>
+          <p>📍 Lautaro 225, Pinamar</p>
+          <p>📞 +54 9 11 5229-6000</p>
+          <p>✉️ info@lautaro225_vacaciones.com</p>
         </div>
         <div className="footer-section">
           <h4>Síguenos</h4>
           <div className="social-links">
             <a href="#" aria-label="Facebook">Facebook</a>
-            <a href="#" aria-label="Instagram">Instagram</a>
-            <a href="#" aria-label="WhatsApp">WhatsApp</a>
+            <a href="https://www.instagram.com/lautaro225_vacaciones/" aria-label="Instagram">Instagram</a>
           </div>
         </div>
         <div className="footer-section">

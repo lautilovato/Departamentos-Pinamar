@@ -1,0 +1,500 @@
+.admin-panel {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.admin-title {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.admin-panel-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.error-message {
+  background-color: #fee;
+  color: #c33;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  text-align: center;
+  border: 1px solid #fcc;
+}
+
+/* Layout principal */
+.admin-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+/* Sección del calendario */
+.calendar-section {
+  background: white;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 20px;
+}
+
+.calendar-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Selector de departamentos - usando el estilo original de reservas */
+.dept-selector {
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  /* Por defecto alineado a la izquierda como en reservas */
+}
+
+/* Clase específica para el panel de administrador - botones centrados */
+.admin-panel .dept-selector {
+  justify-content: center;
+}
+
+.dept-button {
+  border: 1px solid #d0d7e2;
+  padding: .65rem 1.1rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #fff, #FCF3E3);
+  color: var(--color-accent-slate, #2C3E50);
+  cursor: pointer;
+  font-weight: 500;
+  transition: background .35s ease, color .35s ease, transform .25s ease;
+  font-size: .9rem;
+}
+
+.dept-button:hover:not(.active) {
+  background: linear-gradient(135deg, #FFF8EC, #FDE7C2);
+}
+
+.dept-button:hover {
+  transform: translateY(-2px);
+}
+
+.dept-button.active {
+  background: linear-gradient(135deg, #F39C12, #D68910);
+  color: #fff;
+  border-color: #D68910;
+  box-shadow: 0 4px 14px -4px rgba(243, 156, 18, .55);
+}
+
+/* Calendario */
+.calendar {
+  width: 100%;
+}
+
+.cal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 0 10px;
+}
+
+.nav-btn {
+  background: #f1f5f9;
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #64748b;
+}
+
+.nav-btn:hover {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.month-label {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #1e293b;
+  text-transform: capitalize;
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 8px;
+}
+
+.weekday {
+  text-align: center;
+  font-weight: 600;
+  color: #64748b;
+  font-size: 0.85rem;
+  padding: 8px 0;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: #f8fafc;
+  color: #334155;
+}
+
+.day.blank {
+  background: transparent;
+  cursor: default;
+}
+
+.day.past {
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: default;
+}
+
+.day.reserved {
+  background: repeating-linear-gradient(
+    45deg,
+    #ef4444,
+    #ef4444 6px,
+    #dc2626 6px,
+    #dc2626 12px
+  );
+  color: white;
+  cursor: default;
+}
+
+.day:hover:not(.past):not(.reserved) {
+  background: #e2e8f0;
+}
+
+/* Leyenda */
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 1px solid #e2e8f0;
+}
+
+.swatch.libre {
+  background: #f8fafc;
+}
+
+.swatch.ocupado {
+  background: repeating-linear-gradient(
+    45deg,
+    #ef4444,
+    #ef4444 6px,
+    #dc2626 6px,
+    #dc2626 12px
+  );
+}
+
+/* Gestión de reservas */
+.reservas-management {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.reservas-section.compact {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #eee;
+}
+
+.section-title.pendientes {
+  color: #f39c12;
+  border-bottom-color: #f39c12;
+}
+
+.section-title.confirmadas {
+  color: #27ae60;
+  border-bottom-color: #27ae60;
+}
+
+.section-title.rechazadas {
+  color: #e74c3c;
+  border-bottom-color: #e74c3c;
+}
+
+.no-reservas {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 20px 0;
+  font-size: 0.9rem;
+}
+
+/* Lista compacta de reservas */
+.reservas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reserva-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #fafafa;
+  transition: all 0.2s ease;
+}
+
+.reserva-item:hover {
+  background: #f5f5f5;
+  border-color: #d1d5db;
+}
+
+.reserva-item.pendiente {
+  border-left: 4px solid #f39c12;
+}
+
+.reserva-item.confirmada {
+  border-left: 4px solid #27ae60;
+}
+
+.reserva-item.rechazada {
+  border-left: 4px solid #e74c3c;
+}
+
+.reserva-info-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.cliente-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cliente-info strong {
+  color: #1f2937;
+  font-size: 0.95rem;
+}
+
+.depto {
+  background: #e5e7eb;
+  color: #6b7280;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.fechas-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.fechas-info span:nth-child(2) {
+  color: #9ca3af;
+}
+
+.tel-info {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* Botones compactos */
+.reserva-actions-compact {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-confirmar-sm,
+.btn-rechazar-sm {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.btn-confirmar-sm {
+  background-color: #27ae60;
+  color: white;
+}
+
+.btn-confirmar-sm:hover {
+  background-color: #219a52;
+  transform: scale(1.05);
+}
+
+.btn-rechazar-sm {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn-rechazar-sm:hover {
+  background-color: #c0392b;
+  transform: scale(1.05);
+}
+
+/* Badges de estado compactos */
+.estado-badge-sm {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-size: 1rem;
+}
+
+.estado-badge-sm.confirmada {
+  background-color: #27ae60;
+}
+
+.estado-badge-sm.rechazada {
+  background-color: #e74c3c;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .admin-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .calendar-section {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-panel {
+    padding: 15px;
+  }
+
+  .admin-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  .calendar-section {
+    padding: 20px;
+  }
+
+  .dept-selector {
+    flex-direction: column;
+  }
+
+  .dept-button {
+    width: 100%;
+  }
+
+  .legend {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .reserva-info-compact {
+    gap: 6px;
+  }
+
+  .cliente-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-title {
+    font-size: 1.8rem;
+  }
+
+  .calendar-title {
+    font-size: 1.2rem;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+  }
+
+  .reserva-item {
+    padding: 10px;
+  }
+
+  .fechas-info {
+    flex-wrap: wrap;
+  }
+}
