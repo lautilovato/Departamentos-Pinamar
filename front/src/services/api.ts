@@ -13,14 +13,13 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-// Interceptor para requests (opcional - para agregar tokens, logs, etc)
+// Interceptor para requests (agregar tokens de autenticación)
 api.interceptors.request.use(
   (config) => {
-    // Aquí puedes agregar tokens de autenticación si los necesitas
-    // const token = localStorage.getItem('token');
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     console.log('Request:', config.method?.toUpperCase(), config.url);
     return config;
   },
@@ -29,13 +28,37 @@ api.interceptors.request.use(
   }
 );
 
-// Interceptor para responses (opcional - para manejo de errores globales)
+// Interceptor para responses (manejo de errores y refresh de tokens)
 api.interceptors.response.use(
   (response) => {
     console.log('Response:', response.status, response.config.url);
     return response;
   },
-  (error) => {
+  async (error) => {
+    const originalRequest = error.config;
+    
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      
+      try {
+        const refreshToken = localStorage.getItem('refreshToken');
+        if (refreshToken) {
+          const response = await api.post('/auth/tokens/refresh', {
+            refreshToken
+          });
+          const { accessToken } = response.data;
+          localStorage.setItem('accessToken', accessToken);
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+          return api(originalRequest);
+        }
+      } catch (refreshError) {
+        // Si el refresh falla, limpiar tokens y redirigir al login
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        window.location.href = '/admin/login';
+      }
+    }
+    
     console.error('API Error:', error.response?.status, error.response?.data);
     return Promise.reject(error);
   }
@@ -62,6 +85,54 @@ export const apiService = {
     } catch (error) {
       console.error('Error getting welcome message:', error);
       throw error;
+    }
+  },
+
+  // Funciones de autenticación
+  auth: {
+    // Login de administrador
+    login: async (email: string, password: string) => {
+      try {
+        const response = await api.post('/auth/login', {
+          email,
+          password,
+          role: 'ADMIN'
+        });
+        return response.data;
+      } catch (error) {
+        console.error('Error en login:', error);
+        throw error;
+      }
+    },
+
+    // Logout
+    logout: () => {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+    },
+
+    // Verificar si está autenticado
+    isAuthenticated: () => {
+      const token = localStorage.getItem('accessToken');
+      return !!token;
+    },
+
+    // Obtener token
+    getToken: () => {
+      return localStorage.getItem('accessToken');
+    },
+
+    // Refresh token
+    refreshToken: async (refreshToken: string) => {
+      try {
+        const response = await api.post('/auth/tokens/refresh', {
+          refreshToken
+        });
+        return response.data;
+      } catch (error) {
+        console.error('Error refreshing token:', error);
+        throw error;
+      }
     }
   },
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api';
 import './AdminPanel.css';
 
@@ -65,6 +66,7 @@ const AdminPanel: React.FC = () => {
   const [todasReservas, setTodasReservas] = useState<ReservaParsed[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   // Estados del calendario
   const [visibleMonth, setVisibleMonth] = useState<Date>(() => new Date());
@@ -121,6 +123,11 @@ const AdminPanel: React.FC = () => {
     }
   };
 
+  const handleLogout = () => {
+    apiService.auth.logout();
+    navigate('/admin/login');
+  };
+
   useEffect(() => {
     cargarReservas();
   }, []);
@@ -150,7 +157,14 @@ const AdminPanel: React.FC = () => {
 
   return (
     <div className="admin-panel">
-      <h1 className="admin-title">Panel de Administrador</h1>
+      <div className="admin-header">
+        <h1 className="admin-title">Panel de Administrador</h1>
+        <div className="admin-actions">
+          <button onClick={handleLogout} className="logout-button">
+            Cerrar Sesión
+          </button>
+        </div>
+      </div>
       
       {error && <div className="error-message">{error}</div>}
 

@@ -7,6 +7,8 @@ import DevPage from './DevPage'
 import Layout from './components/layout/Layout';
 import Reservas from './reservas/Reservas';
 import AdminPanel from './dashboard/AdminPanel'
+import AdminLogin from './dashboard/AdminLogin'
+import ProtectedRoute from './components/ProtectedRoute'
 
 interface BackendStatus {
   message: string;
@@ -54,11 +56,11 @@ function App() {
     <Router>
       <div className="app">
         <Routes>
+          {/* Rutas públicas con layout (navbar y footer) */}
           <Route element={<Layout />}> 
             <Route path="/" element={<Home />} />
             <Route path="/dev" element={<DevPage backendStatus={backendStatus} />} />
             <Route path="/reservas" element={<Reservas />} />
-            <Route path="/admin" element={<AdminPanel />} />
             <Route path="*" element={
               <div style={{ textAlign: 'center', padding: '50px' }}>
                 <h2>Página no encontrada</h2>
@@ -67,6 +69,17 @@ function App() {
               </div>
             } />
           </Route>
+
+          {/* Rutas de administración sin layout */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route 
+            path="/admin" 
+            element={
+              <ProtectedRoute>
+                <AdminPanel />
+              </ProtectedRoute>
+            } 
+          />
         </Routes>
       </div>
     </Router>
