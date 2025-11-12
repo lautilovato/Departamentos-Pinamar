@@ -42,4 +42,28 @@ export class ReservasService {
         return reserva;
     }
 
+    async confirmarReserva(id: number): Promise<Reserva> {
+        const reserva = await this.reservasRepository.findOne({ id });
+        if (!reserva) {
+            throw new NotFoundException('Reserva no encontrada');
+        }
+        reserva.estado = 'confirmada';
+        await this.reservasRepository.save(reserva);
+        return reserva;
+    }
+
+    async rechazarReserva(id: number): Promise<Reserva> {
+        const reserva = await this.reservasRepository.findOne({ id });
+        if (!reserva) {
+            throw new NotFoundException('Reserva no encontrada');
+        }
+        reserva.estado = 'rechazada';
+        await this.reservasRepository.save(reserva);
+        return reserva;
+    }
+
+    async findByEstado(estado: string): Promise<Reserva[]> {
+        return this.reservasRepository.find({ estado });
+    }
+
 }

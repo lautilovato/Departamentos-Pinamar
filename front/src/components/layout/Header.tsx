@@ -21,6 +21,39 @@ const Header: React.FC = () => {
 
   useEffect(() => { document.body.style.overflow = open ? 'hidden' : ''; }, [open]);
 
+  // Función para hacer scroll suave al footer
+  const scrollToFooter = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    closeMenu();
+    
+    const footer = document.getElementById('footer') || document.querySelector('footer');
+    if (footer) {
+      const footerPosition = footer.offsetTop;
+      const startPosition = window.pageYOffset;
+      const distance = footerPosition - startPosition;
+      const duration = 1000; // 1 segundo de duración
+      let start: number | null = null;
+
+      function animation(currentTime: number) {
+        if (start === null) start = currentTime;
+        const timeElapsed = currentTime - start;
+        const run = ease(timeElapsed, startPosition, distance, duration);
+        window.scrollTo(0, run);
+        if (timeElapsed < duration) requestAnimationFrame(animation);
+      }
+
+      // Función de easing para un movimiento más suave
+      function ease(t: number, b: number, c: number, d: number) {
+        t /= d / 2;
+        if (t < 1) return c / 2 * t * t + b;
+        t--;
+        return -c / 2 * (t * (t - 2) - 1) + b;
+      }
+
+      requestAnimationFrame(animation);
+    }
+  }, [closeMenu]);
+
   return (
     <nav className={`navbar ${open ? 'nav-open' : ''}`}>
       <div className="nav-inner">
@@ -45,9 +78,9 @@ const Header: React.FC = () => {
         aria-hidden={!open}
       >
         <li><Link to="/" onClick={closeMenu}>Inicio</Link></li>
-        <li><a href="#departamentos" onClick={closeMenu}>Departamentos</a></li>
+        <li><a href="#galeria" onClick={closeMenu}>Galería</a></li>
         <li><Link to="/reservas" onClick={closeMenu}>Reservas</Link></li>
-        <li><a href="#contacto" onClick={closeMenu}>Contacto</a></li>
+        <li><a href="#contacto" onClick={scrollToFooter}>Contacto</a></li>
       </ul>
     </nav>
   );
