@@ -212,8 +212,30 @@ const Reservas: React.FC = () => {
       <div className="panel fade-in" style={{ marginBottom: '1.5rem' }}>
         <h1 className="title">Reservar estadía</h1>
         <p style={{ margin: '0 0 1rem', fontSize: '.9rem', color: '#475569' }}>
-          Elegí un departamento, seleccioná un rango de fechas disponible y completá tus datos para solicitar la reserva.
+          Elegí un departamento, seleccioná un rango de fechas disponible y completá tus datos para solicitar la reserva. A la brevedad nos pondremos en contacto contigo para confirmar la estadía.
         </p>
+        
+        <div style={{ 
+          background: 'linear-gradient(135deg, #fff7ed, #fed7aa)', 
+          padding: '12px 16px', 
+          borderRadius: '8px', 
+          margin: '0 0 1.2rem', 
+          border: '1px solid #fb923c',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '20px',
+          flexWrap: 'wrap'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '.85rem', color: '#ea580c' }}>
+            <span style={{ fontSize: '1rem' }}>🕐</span>
+            <strong>Check-in:</strong> 12:00
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '.85rem', color: '#ea580c' }}>
+            <span style={{ fontSize: '1rem' }}>🕙</span>
+            <strong>Check-out:</strong> 10:00
+          </div>
+        </div>
 
         <div className="dept-selector">
           {departamentos.map(d => (
@@ -288,7 +310,7 @@ const Reservas: React.FC = () => {
               <div><strong>Noches:</strong> {
                 (() => {
                   if (!startDate || !endDate) return 0;
-                  const diff = Math.round((startOfDay(endDate).getTime() - startOfDay(startDate).getTime()) / 86400000) + 1;
+                  const diff = Math.round((startOfDay(endDate).getTime() - startOfDay(startDate).getTime()) / 86400000);
                   return diff;
                 })()
               }</div>
@@ -297,7 +319,7 @@ const Reservas: React.FC = () => {
 
             <div className="form-group">
               <label htmlFor="nombre">Nombre y Apellido</label>
-              <input id="nombre" value={nombreCliente} onChange={e => setNombreCliente(e.target.value)} placeholder="Juan Pérez" />
+              <input id="nombre" value={nombreCliente} onChange={e => setNombreCliente(e.target.value)}/>
             </div>
             <div className="form-group">
               <label htmlFor="tel">Teléfono</label>
