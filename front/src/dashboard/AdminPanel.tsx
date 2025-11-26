@@ -65,12 +65,39 @@ const AdminPanel: React.FC = () => {
   const [reservasRechazadas, setReservasRechazadas] = useState<Reserva[]>([]);
   const [todasReservas, setTodasReservas] = useState<ReservaParsed[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError,] = useState<string | null>(null);
   const navigate = useNavigate();
 
   // Estados del calendario
   const [visibleMonth, setVisibleMonth] = useState<Date>(() => new Date());
   const [selectedDepto, setSelectedDepto] = useState<number>(1);
+
+  // Estados del modal de edición
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editFormData, setEditFormData] = useState<Reserva>({
+    id: 0,
+    cliente: '',
+    numeroTel: '',
+    numeroDepartamento: '',
+    fechaInicio: '',
+    fechaFin: '',
+    estado: ''
+  });
+
+  // Estados del modal de creación de nueva reserva
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [createFormData, setCreateFormData] = useState<Omit<Reserva, 'id'>>({
+    cliente: '',
+    numeroTel: '',
+    numeroDepartamento: '',
+    fechaInicio: '',
+    fechaFin: '',
+    estado: 'pendiente'
+  });
+
+  // Estados del modal de confirmación de eliminación
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [reservaToDelete, setReservaToDelete] = useState<Reserva | null>(null);
 
   const cargarReservas = async () => {
     try {
@@ -123,6 +150,143 @@ const AdminPanel: React.FC = () => {
     }
   };
 
+  const editarReserva = (reserva: Reserva) => {
+    // Formatear fechas para el input date
+    const fechaInicioFormatted = new Date(reserva.fechaInicio).toISOString().split('T')[0];
+    const fechaFinFormatted = new Date(reserva.fechaFin).toISOString().split('T')[0];
+    
+    setEditFormData({
+      ...reserva,
+      fechaInicio: fechaInicioFormatted,
+      fechaFin: fechaFinFormatted
+    });
+    setShowEditModal(true);
+  };
+
+  const eliminarReserva = (reserva: Reserva) => {
+    setReservaToDelete(reserva);
+    setShowDeleteModal(true);
+  };
+
+  const confirmarEliminacion = async () => {
+    if (!reservaToDelete) return;
+    
+    try {
+      setLoading(true);
+      await apiService.reservas.delete(reservaToDelete.id);
+      setShowDeleteModal(false);
+      setReservaToDelete(null);
+      await cargarReservas();
+    } catch (error) {
+      console.error('Error eliminando reserva:', error);
+      setError('Error al eliminar la reserva');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const cancelarEliminacion = () => {
+    setShowDeleteModal(false);
+    setReservaToDelete(null);
+  };
+
+  const guardarCambiosReserva = async () => {
+    try {
+      console.log('Guardando cambios de reserva:', editFormData);
+      
+      // Validación básica
+      if (!editFormData.cliente || !editFormData.numeroTel || !editFormData.fechaInicio || !editFormData.fechaFin) {
+        setError('Por favor completa todos los campos obligatorios');
+        return;
+      }
+
+      setLoading(true);
+      await apiService.reservas.update(editFormData.id, editFormData);
+      
+      console.log('Reserva actualizada exitosamente');
+      
+      // Cerrar modal y limpiar estados
+      setShowEditModal(false);
+      setError(null);
+      
+      // Recargar reservas
+      await cargarReservas();
+      
+      console.log('Reservas recargadas');
+    } catch (error) {
+      console.error('Error actualizando reserva:', error);
+      setError('Error al actualizar la reserva');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEditFormChange = (field: keyof Reserva, value: string) => {
+    setEditFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const cerrarModal = () => {
+    setShowEditModal(false);
+  };
+
+  const abrirModalCrearReserva = () => {
+    // Limpiar formulario y establecer valores por defecto
+    setCreateFormData({
+      cliente: '',
+      numeroTel: '',
+      numeroDepartamento: '',
+      fechaInicio: '',
+      fechaFin: '',
+      estado: 'pendiente'
+    });
+    setShowCreateModal(true);
+  };
+
+  const cerrarModalCrear = () => {
+    setShowCreateModal(false);
+  };
+
+  const handleCreateFormChange = (field: keyof Omit<Reserva, 'id'>, value: string) => {
+    setCreateFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const crearNuevaReserva = async () => {
+    try {
+      console.log('Creando nueva reserva:', createFormData);
+      
+      // Validación básica
+      if (!createFormData.cliente || !createFormData.numeroTel || !createFormData.fechaInicio || !createFormData.fechaFin || !createFormData.numeroDepartamento) {
+        setError('Por favor completa todos los campos obligatorios');
+        return;
+      }
+
+      setLoading(true);
+      await apiService.reservas.create(createFormData);
+      
+      console.log('Reserva creada exitosamente');
+      
+      // Cerrar modal y limpiar estados
+      setShowCreateModal(false);
+      setError(null);
+      
+      // Recargar reservas
+      await cargarReservas();
+      
+      console.log('Reservas recargadas');
+    } catch (error) {
+      console.error('Error creando reserva:', error);
+      setError('Error al crear la reserva');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleLogout = () => {
     apiService.auth.logout();
     navigate('/admin/login');
@@ -160,6 +324,9 @@ const AdminPanel: React.FC = () => {
       <div className="admin-header">
         <h1 className="admin-title">Panel de Administrador</h1>
         <div className="admin-actions">
+          <button onClick={() => abrirModalCrearReserva()} className="create-reservation-button">
+            Registrar Reserva
+          </button>
           <button onClick={handleLogout} className="logout-button">
             Cerrar Sesión
           </button>
@@ -309,7 +476,23 @@ const AdminPanel: React.FC = () => {
                       </div>
                       <div className="tel-info">📞 {reserva.numeroTel}</div>
                     </div>
-                    <div className="estado-badge-sm confirmada">✓</div>
+                    <div className="reserva-actions-compact">
+                      <button
+                        className="btn-editar-sm"
+                        onClick={() => editarReserva(reserva)}
+                        title="Editar"
+                      >
+                        ✎
+                      </button>
+                      <button
+                        className="btn-eliminar-sm"
+                        onClick={() => eliminarReserva(reserva)}
+                        title="Eliminar"
+                      >
+                        🗑
+                      </button>
+                      <div className="estado-badge-sm confirmada">✓</div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -339,7 +522,23 @@ const AdminPanel: React.FC = () => {
                       </div>
                       <div className="tel-info">📞 {reserva.numeroTel}</div>
                     </div>
-                    <div className="estado-badge-sm rechazada">✗</div>
+                    <div className="reserva-actions-compact">
+                      <button
+                        className="btn-editar-sm"
+                        onClick={() => editarReserva(reserva)}
+                        title="Editar"
+                      >
+                        ✎
+                      </button>
+                      <button
+                        className="btn-eliminar-sm"
+                        onClick={() => eliminarReserva(reserva)}
+                        title="Eliminar"
+                      >
+                        🗑
+                      </button>
+                      <div className="estado-badge-sm rechazada">✗</div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -347,6 +546,211 @@ const AdminPanel: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal de edición */}
+      {showEditModal && (
+        <div className="modal" onClick={cerrarModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>Editar Reserva</h2>
+            <div className="form-group">
+              <label>Cliente</label>
+              <input
+                type="text"
+                value={editFormData.cliente}
+                onChange={(e) => handleEditFormChange('cliente', e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Teléfono</label>
+              <input
+                type="text"
+                value={editFormData.numeroTel}
+                onChange={(e) => handleEditFormChange('numeroTel', e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Departamento</label>
+              <select
+                value={editFormData.numeroDepartamento}
+                onChange={(e) => handleEditFormChange('numeroDepartamento', e.target.value)}
+                required
+              >
+                <option value="">Seleccionar departamento</option>
+                {departamentos.map(d => (
+                  <option key={d.id} value={d.codigo}>{d.nombre}</option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Fecha Inicio</label>
+              <input
+                type="date"
+                value={editFormData.fechaInicio}
+                onChange={(e) => handleEditFormChange('fechaInicio', e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Fecha Fin</label>
+              <input
+                type="date"
+                value={editFormData.fechaFin}
+                onChange={(e) => handleEditFormChange('fechaFin', e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Estado</label>
+              <select
+                value={editFormData.estado}
+                onChange={(e) => handleEditFormChange('estado', e.target.value)}
+                required
+              >
+                <option value="pendiente">Pendiente</option>
+                <option value="confirmada">Confirmada</option>
+                <option value="rechazada">Rechazada</option>
+              </select>
+            </div>
+            <div className="form-actions">
+              <button 
+                type="button" 
+                onClick={guardarCambiosReserva}
+                disabled={loading}
+              >
+                {loading ? 'Guardando...' : 'Guardar'}
+              </button>
+              <button type="button" onClick={cerrarModal}>Cancelar</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de confirmación de eliminación */}
+      {showDeleteModal && reservaToDelete && (
+        <div className="modal" onClick={cancelarEliminacion}>
+          <div className="modal-content delete-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="delete-modal-header">
+              <span className="delete-icon">⚠️</span>
+              <h2>Confirmar Eliminación</h2>
+            </div>
+            <div className="delete-modal-body">
+              <p className="delete-warning">
+                ¿Estás seguro de que deseas eliminar permanentemente esta reserva?
+              </p>
+              <div className="reserva-details">
+                <strong>Cliente:</strong> {reservaToDelete.cliente}<br/>
+                <strong>Departamento:</strong> {reservaToDelete.numeroDepartamento}<br/>
+                <strong>Fechas:</strong> {new Date(reservaToDelete.fechaInicio).toLocaleDateString()} - {new Date(reservaToDelete.fechaFin).toLocaleDateString()}
+              </div>
+              <p className="delete-note">
+                Esta acción no se puede deshacer.
+              </p>
+            </div>
+            <div className="form-actions delete-actions">
+              <button 
+                type="button" 
+                className="btn-delete-confirm"
+                onClick={confirmarEliminacion}
+                disabled={loading}
+              >
+                {loading ? 'Eliminando...' : 'Sí, Eliminar'}
+              </button>
+              <button 
+                type="button" 
+                className="btn-cancel"
+                onClick={cancelarEliminacion}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de creación de nueva reserva */}
+      {showCreateModal && (
+        <div className="modal" onClick={cerrarModalCrear}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>Registrar Nueva Reserva</h2>
+            <div className="form-group">
+              <label>Cliente</label>
+              <input
+                type="text"
+                value={createFormData.cliente}
+                onChange={(e) => handleCreateFormChange('cliente', e.target.value)}
+                required
+                placeholder="Nombre completo del cliente"
+              />
+            </div>
+            <div className="form-group">
+              <label>Teléfono</label>
+              <input
+                type="text"
+                value={createFormData.numeroTel}
+                onChange={(e) => handleCreateFormChange('numeroTel', e.target.value)}
+                required
+                placeholder="Número de teléfono"
+              />
+            </div>
+            <div className="form-group">
+              <label>Departamento</label>
+              <select
+                value={createFormData.numeroDepartamento}
+                onChange={(e) => handleCreateFormChange('numeroDepartamento', e.target.value)}
+                required
+              >
+                <option value="">Seleccionar departamento</option>
+                {departamentos.map(d => (
+                  <option key={d.id} value={d.codigo}>{d.nombre}</option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Fecha Inicio</label>
+              <input
+                type="date"
+                value={createFormData.fechaInicio}
+                onChange={(e) => handleCreateFormChange('fechaInicio', e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Fecha Fin</label>
+              <input
+                type="date"
+                value={createFormData.fechaFin}
+                onChange={(e) => handleCreateFormChange('fechaFin', e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Estado</label>
+              <select
+                value={createFormData.estado}
+                onChange={(e) => handleCreateFormChange('estado', e.target.value)}
+                required
+              >
+                <option value="pendiente">Pendiente</option>
+                <option value="confirmada">Confirmada</option>
+                <option value="rechazada">Rechazada</option>
+              </select>
+            </div>
+            <div className="form-actions">
+              <button 
+                type="button" 
+                onClick={crearNuevaReserva}
+                disabled={loading}
+              >
+                {loading ? 'Creando...' : 'Crear Reserva'}
+              </button>
+              <button type="button" onClick={cerrarModalCrear}>Cancelar</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
