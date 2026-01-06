@@ -191,6 +191,28 @@ export const apiService = {
         console.error('Error creando reserva:', error);
         throw error;
       }
+    },
+
+    // Actualizar reserva
+    update: async (id: number, reservaData: any) => {
+      try {
+        const response = await api.patch(`/reservas/${id}`, reservaData);
+        return response.data;
+      } catch (error) {
+        console.error('Error actualizando reserva:', error);
+        throw error;
+      }
+    },
+
+    // Eliminar reserva
+    delete: async (id: number) => {
+      try {
+        const response = await api.delete(`/reservas/${id}`);
+        return response.data;
+      } catch (error) {
+        console.error('Error eliminando reserva:', error);
+        throw error;
+      }
     }
   }
 };
