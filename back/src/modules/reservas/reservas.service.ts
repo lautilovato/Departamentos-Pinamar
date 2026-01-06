@@ -42,6 +42,15 @@ export class ReservasService {
         return reserva;
     }
 
+    async delete(reservaId: number) {
+        const reserva = await this.reservasRepository.findOne({ id: reservaId });
+        if (!reserva) {
+          throw new NotFoundException('Reserva no encontrada');
+        }
+        await this.reservasRepository.removeAndFlush(reserva);
+    }
+
+
     async confirmarReserva(id: number): Promise<Reserva> {
         const reserva = await this.reservasRepository.findOne({ id });
         if (!reserva) {

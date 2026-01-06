@@ -45,6 +45,16 @@ export class ReservasController {
         return this.reservasService.create(createReservaDto);
     }
 
+    @Patch(':id')
+    async updateReserva(@Param('id', ParseIntPipe) id: number, @Body() updateReservaDto: UpdateReservaDto) {
+        return await this.reservasService.update(id, updateReservaDto);
+    }
+
+    @Delete(':id')
+        async deleteReserva(@Param('id', ParseIntPipe) id: number) {
+            await this.reservasService.delete(id);
+    }
+
     @Patch(':id/confirmar')
     async confirmarReserva(@Param('id', ParseIntPipe) id: number) {
         return await this.reservasService.confirmarReserva(id);
