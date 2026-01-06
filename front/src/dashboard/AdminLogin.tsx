@@ -78,7 +78,6 @@ const AdminLogin: React.FC = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@ejemplo.com"
               className="form-input"
               required
               disabled={loading}
@@ -94,7 +93,6 @@ const AdminLogin: React.FC = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
               className="form-input"
               required
               disabled={loading}
