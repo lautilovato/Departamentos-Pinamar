@@ -66,7 +66,7 @@ const ImageGallery: React.FC = () => {
   };
 
   return (
-    <section className="gallery-section">
+    <section id="gallery" className="gallery-section">
       <div className="container">
         <h2 className="gallery-title">Conoce Nuestras Instalaciones</h2>
         <p className="gallery-subtitle">
