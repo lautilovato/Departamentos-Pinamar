@@ -54,6 +54,39 @@ const Header: React.FC = () => {
     }
   }, [closeMenu]);
 
+  // Función para hacer scroll suave a la galería
+  const scrollToGallery = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    closeMenu();
+    
+    const gallery = document.getElementById('gallery');
+    if (gallery) {
+      const galleryPosition = gallery.offsetTop - 80; // Ajuste para el navbar
+      const startPosition = window.pageYOffset;
+      const distance = galleryPosition - startPosition;
+      const duration = 1000; // 1 segundo de duración
+      let start: number | null = null;
+
+      function animation(currentTime: number) {
+        if (start === null) start = currentTime;
+        const timeElapsed = currentTime - start;
+        const run = ease(timeElapsed, startPosition, distance, duration);
+        window.scrollTo(0, run);
+        if (timeElapsed < duration) requestAnimationFrame(animation);
+      }
+
+      // Función de easing para un movimiento más suave
+      function ease(t: number, b: number, c: number, d: number) {
+        t /= d / 2;
+        if (t < 1) return c / 2 * t * t + b;
+        t--;
+        return -c / 2 * (t * (t - 2) - 1) + b;
+      }
+
+      requestAnimationFrame(animation);
+    }
+  }, [closeMenu]);
+
   return (
     <nav className={`navbar ${open ? 'nav-open' : ''}`}>
       <div className="nav-inner">
@@ -78,7 +111,7 @@ const Header: React.FC = () => {
         aria-hidden={!open}
       >
         <li><Link to="/" onClick={closeMenu}>Inicio</Link></li>
-        <li><a href="#galeria" onClick={closeMenu}>Galería</a></li>
+        <li><a href="#galeria" onClick={scrollToGallery}>Galería</a></li>
         <li><Link to="/reservas" onClick={closeMenu}>Reservas</Link></li>
         <li><a href="#contacto" onClick={scrollToFooter}>Contacto</a></li>
       </ul>
