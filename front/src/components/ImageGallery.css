@@ -158,11 +158,11 @@
 }
 
 .modal-title {
-  color: #FFFFFF;
+  color: #F39C12;
   font-size: 1.5rem;
   margin-top: 1.5rem;
   text-align: center;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  
 }
 
 .modal-close {

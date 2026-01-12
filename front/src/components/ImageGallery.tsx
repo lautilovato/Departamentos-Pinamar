@@ -17,7 +17,7 @@ const ImageGallery: React.FC = () => {
       id: 1,
       src: '/images/gallery/departamento-1.jpg',
       alt: 'Vista del departamento',
-      title: 'Departamento Principal'
+      title: 'Vista Principal'
     },
     {
       id: 2,
@@ -47,7 +47,7 @@ const ImageGallery: React.FC = () => {
       id: 6,
       src: '/images/gallery/departamento-6.jpg',
       alt: 'Estacionamiento',
-      title: 'Estacionamiento Seguro'
+      title: 'Área de Estacionamiento'
     }
   ];
 
