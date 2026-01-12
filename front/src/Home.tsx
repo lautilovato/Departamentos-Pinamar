@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import './Home.css';
+import ImageGallery from './components/ImageGallery';
 
 const Home: React.FC = () => {
   useEffect(() => {
@@ -53,6 +54,9 @@ const Home: React.FC = () => {
             </div>
           </div>
         </section>
+
+        {/* Image Gallery Section */}
+        <ImageGallery />
       </main>
     </div>
   );
